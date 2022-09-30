@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>teste</title>
+  <style>
+    body {
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <!-- <canvas id='cv' width="100vw" height="100vh"></canvas> -->
+  <img id="imagem" height="100" width="100" src="http://cbissn.ibict.br/images/phocagallery/galeria2/thumbs/phoca_thumb_l_image03_grd.png" alt="" srcset="">
+
+  <script>
+    const worker = new Worker("./worker.js");
+    // const canvas = document.getElementById("cv")
+    // const ctx = canvas.getContext("2d");
+
+    // canvas.width = window.innerWidth;
+    // canvas.height = window.innerHeight;
+    // ctx.fillStyle = "#2E3B4F";
+    // ctx.fillRect(0,0,canvas.width, canvas.height);
+
+
+  start = null;
+  isVisible = true;
+  const element = document.getElementById("imagem")
+  let secondsPassed;
+  let oldTimeStamp;
+  let fps;
+
+  function showFps(timeStamp) {
+    secondsPassed = (timeStamp - oldTimeStamp) / 1000;
+    oldTimeStamp = timeStamp;
+
+    // Calculate fps
+    fps = Math.round(1 / secondsPassed);
+
+    // Draw number to the screen
+    ctx.fillStyle = '#2E3B4F';
+    ctx.fillRect(0, 0, 200, 100);
+    ctx.font = '25px Arial';
+    ctx.fillStyle = 'black';
+    ctx.fillText("FPS: " + fps, 10, 30);
+  }
+
+  function draw(){
+    let randomColor = Math.random() > 0.5? '#ff8080' : '#0099b0';
+    ctx.fillStyle = randomColor;
+    ctx.fillRect(100, 50, 200, 175);
+  } 
+
+  // function loop(timestamp) {
+  //   if (!start) {
+  //     start = timestamp;
+  //   }
+  //   const progress = timestamp - start;
+  //   if (progress >= 200) {
+  //     start = null;
+  //     showFps(timestamp)
+  //     draw()
+  //   }
+  //   window.requestAnimationFrame(loop)
+  // }
+  // window.requestAnimationFrame(loop)
+
+  worker.addEventListener("message", event => {
+      // console.log(event.data);
+      isVisible = !isVisible;
+      element.style.display =  isVisible ? 'block' : 'none'
+      // draw()
+  });
+
+  </script>
+</body>
+</html>
